@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    let beep = Beep()
     @State private var showDetails = false
     var body: some View {
         VStack {
@@ -15,7 +16,7 @@ struct ContentView: View {
                 showDetails.toggle()
             }
             if showDetails {
-                Text("Foo")
+                Text(beep.start())
             }
         }
         .padding()
