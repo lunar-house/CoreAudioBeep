@@ -8,12 +8,15 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var showDetails = false
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            Button("Play") {
+                showDetails.toggle()
+            }
+            if showDetails {
+                Text("Foo")
+            }
         }
         .padding()
     }
