@@ -9,14 +9,14 @@ import SwiftUI
 
 struct ContentView: View {
     let beep = Beep()
-    @State private var showDetails = false
+    @State private var playSound = false
+    @State private var buttonText = "Play"
     var body: some View {
         VStack {
-            Button("Play") {
-                showDetails.toggle()
-            }
-            if showDetails {
-                Text(beep.start())
+            Button(buttonText) {
+                playSound ? beep.stop() : beep.start()
+                buttonText = playSound ? "Play" : "Stop"
+                playSound.toggle()
             }
         }
         .padding()

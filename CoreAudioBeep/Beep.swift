@@ -25,14 +25,13 @@ class Beep {
         engine.connect(sourceNode, to: engine.mainMixerNode, format: format)
     }
     
-    func start() -> String {
+    func start() {
         do {
             try engine.start()
         }
         catch {
             print("Engine failed to start: \(error)" )
         }
-        return "Playing beep"
     }
     
     func stop() {
