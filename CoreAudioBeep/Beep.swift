@@ -30,9 +30,9 @@ class Beep {
     
     func attachAudionodeToEngine(audioNode: AVAudioNode, mixer: AVAudioMixerNode, format: AVAudioFormat) {
         // We can't stop and start nodes without stopping and starting the engine
-        // Multiple engines will compete for audio resources, memory and CPU usage
+        // We should use only one engine - multiple engines will compete for audio resources, memory and CPU usage
         // So we attach each node to its own mixer, then connect that to the engine's mainMixerNode
-        // We can then controle the node's volume independently of other nodes
+        // We can then control the node's volume independently of other nodes
         
         // Attach the node to the engine
         engine.attach(audioNode)
