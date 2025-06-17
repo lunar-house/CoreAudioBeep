@@ -9,14 +9,24 @@ import SwiftUI
 
 struct ContentView: View {
     let beep = Beep()
-    @State private var playSound = false
-    @State private var buttonText = "Play"
+    @State private var playNoise = false
+    @State private var playBinaural = false
+
+    @State private var noiseButtonText = "Noise"
+    @State private var binAuralButtonText = "Binaural"
+
     var body: some View {
         VStack {
-            Button(buttonText) {
-                playSound ? beep.stop() : beep.start()
-                buttonText = playSound ? "Play" : "Stop"
-                playSound.toggle()
+            Button(noiseButtonText) {
+                playNoise ? beep.stopNoise() : beep.startNoise()
+                noiseButtonText = playNoise ? "Noise" : "Stop"
+                playNoise.toggle()
+            }
+            
+            Button(binAuralButtonText) {
+                playBinaural ? beep.stopBinaural() : beep.startBinaural()
+                binAuralButtonText = playBinaural ? "Binaural" : "Stop"
+                playBinaural.toggle()
             }
         }
         .padding()
