@@ -12,14 +12,18 @@ class Beep {
     init() {
         let format = AVAudioFormat(standardFormatWithSampleRate: sampleRate, channels: 2)!
         
-        // White noise node (stereo)
+        // Move the logic out of the initialiser
         noiseNode = createNoiseNode()
+    
         binauralNode = createBinauralNode()
         
      
+        // connect the nodes to mixers, then conect the mixers to the engine
         attachAudionodeToEngine(audioNode: noiseNode, mixer: noiseMixer, format: format)
        
         attachAudionodeToEngine(audioNode: binauralNode, mixer: binauralMixer, format: format)
+        
+        // start the engine on initialising (this can be moved out of here too)
         do {
             try engine.start()
         }
@@ -29,8 +33,8 @@ class Beep {
     }
     
     func attachAudionodeToEngine(audioNode: AVAudioNode, mixer: AVAudioMixerNode, format: AVAudioFormat) {
-        // We can't stop and start nodes without stopping and starting the engine
-        // We should use only one engine - multiple engines will compete for audio resources, memory and CPU usage
+        // Previously we attached a single node to the engine's main mixer
+        // But if we have multiple nodes all connected to the main mixer we can't control output separately
         // So we attach each node to its own mixer, then connect that to the engine's mainMixerNode
         // We can then control the node's volume independently of other nodes
         
@@ -51,20 +55,32 @@ class Beep {
     }
     
     func createNoiseNode() -> AVAudioSourceNode {
+    // Create an AVAudioSourceNode that generates white noise
+    // We create this with a callback (the "Render block")
+    // The audio engine will repeatedly call this block when it needs more data
+    // At this point, we create a node that describes how to generate audio data
+    // but no data is created yet - the engine generates this at run time
+    return AVAudioSourceNode { _, _, frameCount, audioBufferList -> OSStatus in
+        // ablPointer will contain a buffer for each channel
+        // the channels are specifed in the AVAudioFormat that we pass to the engine
+        // The engine will tell this node how many channels it has at runtime
+        let ablPointer = UnsafeMutableAudioBufferListPointer(audioBufferList)
         
-        // Create an AVAUdioSourceNode that generates white noise
-        return AVAudioSourceNode { _, _, frameCount, audioBufferList -> OSStatus in
-            let ablPointer = UnsafeMutableAudioBufferListPointer(audioBufferList)
-            for buffer in ablPointer {
-                let samples = buffer.mData?.bindMemory(to: Float.self, capacity: Int(frameCount))
-                for frame in 0..<Int(frameCount) {
-                    samples?[frame] = Float.random(in: -1.0...1.0) * 0.2 // Lower volume
-                }
+        // 2. Loop through each buffer (e.g., left and right channels for stereo)
+        for buffer in ablPointer {
+            // 3. Get a pointer to the buffer's memory as an array of Float samples
+            let samples = buffer.mData?.bindMemory(to: Float.self, capacity: Int(frameCount))
+            
+            // 4. For each frame (sample) in the buffer...
+            for frame in 0..<Int(frameCount) {
+                // 5. ...write a random value between -1.0 and 1.0 (white noise)
+                samples?[frame] = Float.random(in: -1.0...1.0) * 0.2 // Lower volume
             }
-            return noErr
         }
-        
+        // 6. Return noErr (0) to indicate success
+        return noErr
     }
+}
     
     func createBinauralNode() -> AVAudioSourceNode {
         
@@ -79,7 +95,15 @@ class Beep {
         return AVAudioSourceNode { _, _, frameCount, audioBufferList -> OSStatus in
             let ablPointer = UnsafeMutableAudioBufferListPointer(audioBufferList)
             guard ablPointer.count == 2 else { return noErr }
-            let left = ablPointer[0].mData?.bindMemory(to: Float.self, capacity: Int(frameCount))
+           
+           // Note that here we're assuming that ablPointer will have two channels
+           // ablPointer[0] and ablPointer[1]
+           // But we don't know at this stage how the engine's AVAudioFormat is configured
+           // I think this is part of the reason why our ablPointer is "Unsafe"
+           // If the format has only one channel this audio source won't make any sound
+            // To demonstrate this, change the number of channels assigned to "format" above to 1
+            // then try to play this node in the view
+           let left = ablPointer[0].mData?.bindMemory(to: Float.self, capacity: Int(frameCount))
             let right = ablPointer[1].mData?.bindMemory(to: Float.self, capacity: Int(frameCount))
             for frame in 0..<Int(frameCount) {
                 left?[frame] = sin(phaseL) * 0.1
@@ -93,8 +117,11 @@ class Beep {
         }
     }
 
-    // Instead of starting and stopping the engine,
-    // Change the volume of the custom mixers
+    // When we had only one node we controlled output by starting and stopping the engine\
+    // Doing so would start and stop all nodes
+    // We want to use only one engine, since  multiple engines will compete for audio resources, memory and CPU usage
+    // So now we attach nodes to individual mixers and control their volume to "start" and "stop" them
+
     
     func startNoise() {
         noiseMixer.outputVolume = 0.5
