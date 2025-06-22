@@ -96,6 +96,9 @@ class Beep {
     }
 
     func createSquareWaveNode() -> AVAudioSourceNode {
+        
+        var phase: Float = 1.0
+        
         return AVAudioSourceNode {
             _, _, frameCount, audioBufferList -> OSStatus in
 
@@ -106,7 +109,10 @@ class Beep {
                 let samples = buffer.mData?.bindMemory(
                     to: Float.self, capacity: Int(frameCount))
                 for frame in 0..<Int(frameCount) {
-                    samples?[frame] = Float.random(in: -1.0...1.0) * 0.2  // Lower volume
+                    samples?[frame] = phase
+                    if frame % 100 == 0 {
+                        phase *= -1.0
+                    }
                 }
             }
             return noErr
