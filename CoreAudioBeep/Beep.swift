@@ -5,8 +5,10 @@ class Beep {
     let engine = AVAudioEngine()
     var noiseNode: AVAudioSourceNode!
     var binauralNode: AVAudioSourceNode!
+    var squareNode: AVAudioSourceNode!
     var noiseMixer = AVAudioMixerNode()
     var binauralMixer = AVAudioMixerNode()
+    var squareMixer = AVAudioMixerNode()
 
     let sampleRate = 44100.0
     init() {
@@ -18,12 +20,17 @@ class Beep {
 
         binauralNode = createBinauralNode()
 
+        squareNode = createSquareWaveNode()
+
         // connect the nodes to mixers, then conect the mixers to the engine
         attachAudionodeToEngine(
             audioNode: noiseNode, mixer: noiseMixer, format: format)
 
         attachAudionodeToEngine(
             audioNode: binauralNode, mixer: binauralMixer, format: format)
+
+        attachAudionodeToEngine(
+            audioNode: squareNode, mixer: squareMixer, format: format)
 
         // start the engine on initialising (this can be moved out of here too)
         do {
@@ -88,6 +95,24 @@ class Beep {
         }
     }
 
+    func createSquareWaveNode() -> AVAudioSourceNode {
+        return AVAudioSourceNode {
+            _, _, frameCount, audioBufferList -> OSStatus in
+
+            let ablPointer = UnsafeMutableAudioBufferListPointer(
+                audioBufferList)
+
+            for buffer in ablPointer {
+                let samples = buffer.mData?.bindMemory(
+                    to: Float.self, capacity: Int(frameCount))
+                for frame in 0..<Int(frameCount) {
+                    samples?[frame] = Float.random(in: -1.0...1.0) * 0.2  // Lower volume
+                }
+            }
+            return noErr
+        }
+    }
+
     func createBinauralNode() -> AVAudioSourceNode {
 
         // Create an AVAudioSourceNode that creates a binaural tone
@@ -134,7 +159,6 @@ class Beep {
 
     func startNoise() {
         noiseMixer.outputVolume = 0.5
-
     }
 
     func stopNoise() {
@@ -147,5 +171,13 @@ class Beep {
 
     func stopBinaural() {
         binauralMixer.outputVolume = 0.0
+    }
+
+    func startSquare() {
+        squareMixer.outputVolume = 1.0
+    }
+
+    func stopSquare() {
+        squareMixer.outputVolume = 0.0
     }
 }
