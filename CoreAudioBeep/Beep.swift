@@ -2,6 +2,7 @@ import AVFoundation
 import Foundation
 
 class Beep {
+
     let engine = AVAudioEngine()
     var noiseNode: AVAudioSourceNode!
     var binauralNode: AVAudioSourceNode!
@@ -13,7 +14,9 @@ class Beep {
     let sampleRate = 44100.0
     init() {
         let format = AVAudioFormat(
-            standardFormatWithSampleRate: sampleRate, channels: 2)!
+            standardFormatWithSampleRate: sampleRate,
+            channels: 2
+        )!
 
         // Move the logic out of the initialiser
         noiseNode = createNoiseNode()
@@ -24,13 +27,22 @@ class Beep {
 
         // connect the nodes to mixers, then conect the mixers to the engine
         attachAudionodeToEngine(
-            audioNode: noiseNode, mixer: noiseMixer, format: format)
+            audioNode: noiseNode,
+            mixer: noiseMixer,
+            format: format
+        )
 
         attachAudionodeToEngine(
-            audioNode: binauralNode, mixer: binauralMixer, format: format)
+            audioNode: binauralNode,
+            mixer: binauralMixer,
+            format: format
+        )
 
         attachAudionodeToEngine(
-            audioNode: squareNode, mixer: squareMixer, format: format)
+            audioNode: squareNode,
+            mixer: squareMixer,
+            format: format
+        )
 
         // start the engine on initialising (this can be moved out of here too)
         do {
@@ -41,7 +53,9 @@ class Beep {
     }
 
     func attachAudionodeToEngine(
-        audioNode: AVAudioNode, mixer: AVAudioMixerNode, format: AVAudioFormat
+        audioNode: AVAudioNode,
+        mixer: AVAudioMixerNode,
+        format: AVAudioFormat
     ) {
         // Previously we attached a single node to the engine's main mixer
         // But if we have multiple nodes all connected to the main mixer we can't control output separately
@@ -71,18 +85,24 @@ class Beep {
         // At this point, we create a node that describes how to generate audio data
         // but no data is created yet - the engine generates this at run time
         return AVAudioSourceNode {
-            _, _, frameCount, audioBufferList -> OSStatus in
+            _,
+            _,
+            frameCount,
+            audioBufferList -> OSStatus in
             // ablPointer will contain a buffer for each channel
             // the channels are specifed in the AVAudioFormat that we pass to the engine
             // The engine will tell this node how many channels it has at runtime
             let ablPointer = UnsafeMutableAudioBufferListPointer(
-                audioBufferList)
+                audioBufferList
+            )
 
             // 2. Loop through each buffer (e.g., left and right channels for stereo)
             for buffer in ablPointer {
                 // 3. Get a pointer to the buffer's memory as an array of Float samples
                 let samples = buffer.mData?.bindMemory(
-                    to: Float.self, capacity: Int(frameCount))
+                    to: Float.self,
+                    capacity: Int(frameCount)
+                )
 
                 // 4. For each frame (sample) in the buffer...
                 for frame in 0..<Int(frameCount) {
@@ -96,24 +116,38 @@ class Beep {
     }
 
     func createSquareWaveNode() -> AVAudioSourceNode {
-        
-        var phase: Float = 1.0
-        
+
+        var phaseL: Float = 0
+        var phaseR: Float = 0
+        let freqL: Float = 70  // Left ear frequency (Hz)
+        let freqR: Float = 70  // Right ear frequency (Hz)
+        let twoPi = 2 * Float.pi
+
         return AVAudioSourceNode {
-            _, _, frameCount, audioBufferList -> OSStatus in
-
+            _,
+            _,
+            frameCount,
+            audioBufferList -> OSStatus in
             let ablPointer = UnsafeMutableAudioBufferListPointer(
-                audioBufferList)
+                audioBufferList
+            )
+            guard ablPointer.count == 2 else { return noErr }
 
-            for buffer in ablPointer {
-                let samples = buffer.mData?.bindMemory(
-                    to: Float.self, capacity: Int(frameCount))
-                for frame in 0..<Int(frameCount) {
-                    samples?[frame] = phase
-                    if frame % 100 == 0 {
-                        phase *= -1.0
-                    }
-                }
+            let left = ablPointer[0].mData?.bindMemory(
+                to: Float.self,
+                capacity: Int(frameCount)
+            )
+            let right = ablPointer[1].mData?.bindMemory(
+                to: Float.self,
+                capacity: Int(frameCount)
+            )
+            for frame in 0..<Int(frameCount) {
+                left?[frame] = sin(phaseL) > 0 ? 1.0 : -1.0 * 0.1
+                right?[frame] = sin(phaseR) > 0 ? 1.0 : -1.0 * 0.1
+                phaseL += twoPi * freqL / Float(self.sampleRate)
+                phaseR += twoPi * freqR / Float(self.sampleRate)
+                if phaseL > twoPi { phaseL -= twoPi }
+                if phaseR > twoPi { phaseR -= twoPi }
             }
             return noErr
         }
@@ -130,9 +164,13 @@ class Beep {
         let twoPi = 2 * Float.pi
 
         return AVAudioSourceNode {
-            _, _, frameCount, audioBufferList -> OSStatus in
+            _,
+            _,
+            frameCount,
+            audioBufferList -> OSStatus in
             let ablPointer = UnsafeMutableAudioBufferListPointer(
-                audioBufferList)
+                audioBufferList
+            )
             guard ablPointer.count == 2 else { return noErr }
 
             // Note that here we're assuming that ablPointer will have two channels
@@ -143,9 +181,13 @@ class Beep {
             // To demonstrate this, change the number of channels assigned to "format" above to 1
             // then try to play this node in the view
             let left = ablPointer[0].mData?.bindMemory(
-                to: Float.self, capacity: Int(frameCount))
+                to: Float.self,
+                capacity: Int(frameCount)
+            )
             let right = ablPointer[1].mData?.bindMemory(
-                to: Float.self, capacity: Int(frameCount))
+                to: Float.self,
+                capacity: Int(frameCount)
+            )
             for frame in 0..<Int(frameCount) {
                 left?[frame] = sin(phaseL) * 0.1
                 right?[frame] = sin(phaseR) * 0.1

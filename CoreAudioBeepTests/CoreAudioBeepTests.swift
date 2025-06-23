@@ -6,6 +6,7 @@
 //
 
 import Testing
+
 @testable import CoreAudioBeep
 
 struct CoreAudioBeepTests {
