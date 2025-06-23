@@ -23,7 +23,9 @@ class Beep {
 
         binauralNode = createBinauralNode()
 
-        squareNode = createSquareWaveNode()
+//        squareNode = createSquareWaveNode()
+        let squareWave = SquareWave()
+        squareNode = createAudioSourceNode(wave: squareWave)
 
         // connect the nodes to mixers, then conect the mixers to the engine
         attachAudionodeToEngine(
@@ -111,6 +113,35 @@ class Beep {
                 }
             }
             // 6. Return noErr (0) to indicate success
+            return noErr
+        }
+    }
+    
+    func createAudioSourceNode(wave: Wave) -> AVAudioSourceNode {
+        
+        var wave = wave
+        return AVAudioSourceNode {
+            _,
+            _,
+            frameCount,
+            audioBufferList -> OSStatus in
+            let ablPointer = UnsafeMutableAudioBufferListPointer(
+                audioBufferList
+            )
+            guard ablPointer.count == 2 else { return noErr }
+
+            let left = ablPointer[0].mData?.bindMemory(
+                to: Float.self,
+                capacity: Int(frameCount)
+            )
+            let right = ablPointer[1].mData?.bindMemory(
+                to: Float.self,
+                capacity: Int(frameCount)
+            )
+            for frame in 0..<Int(frameCount) {
+                left?[frame] = wave.generateLeftFrame(sampleRate: self.sampleRate)
+                right?[frame] = wave.generateRightFrame(sampleRate: self.sampleRate)
+                       }
             return noErr
         }
     }
