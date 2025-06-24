@@ -11,10 +11,8 @@ import Testing
 struct SquareWaveTests {
 
     @Test func squareWaveTest() async throws {
-        // Write your test here and use APIs like `#expect(...)` to check expected conditions.
-        let squareWave = SquareWave()
-        #expect(squareWave.nextSample(phase: 3.3) == 0)
-        
+        let squareWave = SquareWave(sampleRate: 0, frequency: 0)
+        #expect(squareWave.nextSample() == 0.0)
     }
 
 }

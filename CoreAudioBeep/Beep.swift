@@ -11,7 +11,7 @@ class Beep {
     var binauralMixer = AVAudioMixerNode()
     var squareMixer = AVAudioMixerNode()
 
-    let sampleRate = 44100.0
+    let sampleRate: Double = 44100.0
     init() {
         let format = AVAudioFormat(
             standardFormatWithSampleRate: sampleRate,
@@ -24,7 +24,7 @@ class Beep {
         binauralNode = createBinauralNode()
 
 //        squareNode = createSquareWaveNode()
-        let squareWave = SquareWave()
+        let squareWave = SquareWave(sampleRate: Float(sampleRate), frequency: 70.0)
         squareNode = createAudioSourceNode(wave: squareWave)
 
         // connect the nodes to mixers, then conect the mixers to the engine

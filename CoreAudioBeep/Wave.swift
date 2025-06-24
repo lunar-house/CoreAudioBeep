@@ -15,9 +15,16 @@ protocol Wave {
     
     func nextSample(phase: Float) -> Float
     
+    func nextSample() -> Float
+    
     var phaseL: Float { get set }
     
     var phaseR: Float { get set }
+    
+    var frequency: Float {get set }
+    
+    var sampleRate: Float {get set }
+    
    
 }
 
@@ -50,6 +57,5 @@ extension Wave {
         return frame
     }
     
-    func nextSample() {
-}
+    func nextSample() -> Float { return 0 }
 }
