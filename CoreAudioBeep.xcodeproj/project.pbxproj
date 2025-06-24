@@ -14,19 +14,11 @@
 			remoteGlobalIDString = 0D1B01C42DFEDA0F0093B1FF;
 			remoteInfo = CoreAudioBeep;
 		};
-		0D1B01E12DFEDA100093B1FF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0D1B01BD2DFEDA0F0093B1FF /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 0D1B01C42DFEDA0F0093B1FF;
-			remoteInfo = CoreAudioBeep;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		0D1B01C52DFEDA0F0093B1FF /* CoreAudioBeep.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CoreAudioBeep.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D1B01D62DFEDA100093B1FF /* CoreAudioBeepTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoreAudioBeepTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		0D1B01E02DFEDA100093B1FF /* CoreAudioBeepUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoreAudioBeepUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -38,11 +30,6 @@
 		0D1B01D92DFEDA100093B1FF /* CoreAudioBeepTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = CoreAudioBeepTests;
-			sourceTree = "<group>";
-		};
-		0D1B01E32DFEDA100093B1FF /* CoreAudioBeepUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = CoreAudioBeepUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -62,13 +49,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0D1B01DD2DFEDA100093B1FF /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -77,7 +57,6 @@
 			children = (
 				0D1B01C72DFEDA0F0093B1FF /* CoreAudioBeep */,
 				0D1B01D92DFEDA100093B1FF /* CoreAudioBeepTests */,
-				0D1B01E32DFEDA100093B1FF /* CoreAudioBeepUITests */,
 				0D1B01C62DFEDA0F0093B1FF /* Products */,
 			);
 			sourceTree = "<group>";
@@ -87,7 +66,6 @@
 			children = (
 				0D1B01C52DFEDA0F0093B1FF /* CoreAudioBeep.app */,
 				0D1B01D62DFEDA100093B1FF /* CoreAudioBeepTests.xctest */,
-				0D1B01E02DFEDA100093B1FF /* CoreAudioBeepUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -140,29 +118,6 @@
 			productReference = 0D1B01D62DFEDA100093B1FF /* CoreAudioBeepTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		0D1B01DF2DFEDA100093B1FF /* CoreAudioBeepUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 0D1B01F02DFEDA100093B1FF /* Build configuration list for PBXNativeTarget "CoreAudioBeepUITests" */;
-			buildPhases = (
-				0D1B01DC2DFEDA100093B1FF /* Sources */,
-				0D1B01DD2DFEDA100093B1FF /* Frameworks */,
-				0D1B01DE2DFEDA100093B1FF /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				0D1B01E22DFEDA100093B1FF /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				0D1B01E32DFEDA100093B1FF /* CoreAudioBeepUITests */,
-			);
-			name = CoreAudioBeepUITests;
-			packageProductDependencies = (
-			);
-			productName = CoreAudioBeepUITests;
-			productReference = 0D1B01E02DFEDA100093B1FF /* CoreAudioBeepUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -177,10 +132,6 @@
 						CreatedOnToolsVersion = 16.2;
 					};
 					0D1B01D52DFEDA100093B1FF = {
-						CreatedOnToolsVersion = 16.2;
-						TestTargetID = 0D1B01C42DFEDA0F0093B1FF;
-					};
-					0D1B01DF2DFEDA100093B1FF = {
 						CreatedOnToolsVersion = 16.2;
 						TestTargetID = 0D1B01C42DFEDA0F0093B1FF;
 					};
@@ -202,7 +153,6 @@
 			targets = (
 				0D1B01C42DFEDA0F0093B1FF /* CoreAudioBeep */,
 				0D1B01D52DFEDA100093B1FF /* CoreAudioBeepTests */,
-				0D1B01DF2DFEDA100093B1FF /* CoreAudioBeepUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -216,13 +166,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		0D1B01D42DFEDA100093B1FF /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		0D1B01DE2DFEDA100093B1FF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -246,13 +189,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0D1B01DC2DFEDA100093B1FF /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -260,11 +196,6 @@
 			isa = PBXTargetDependency;
 			target = 0D1B01C42DFEDA0F0093B1FF /* CoreAudioBeep */;
 			targetProxy = 0D1B01D72DFEDA100093B1FF /* PBXContainerItemProxy */;
-		};
-		0D1B01E22DFEDA100093B1FF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 0D1B01C42DFEDA0F0093B1FF /* CoreAudioBeep */;
-			targetProxy = 0D1B01E12DFEDA100093B1FF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -477,38 +408,6 @@
 			};
 			name = Release;
 		};
-		0D1B01F12DFEDA100093B1FF /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEAD_CODE_STRIPPING = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = LunarHouse.CoreAudioBeepUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = CoreAudioBeep;
-			};
-			name = Debug;
-		};
-		0D1B01F22DFEDA100093B1FF /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEAD_CODE_STRIPPING = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = LunarHouse.CoreAudioBeepUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = CoreAudioBeep;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -535,15 +434,6 @@
 			buildConfigurations = (
 				0D1B01EE2DFEDA100093B1FF /* Debug */,
 				0D1B01EF2DFEDA100093B1FF /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		0D1B01F02DFEDA100093B1FF /* Build configuration list for PBXNativeTarget "CoreAudioBeepUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				0D1B01F12DFEDA100093B1FF /* Debug */,
-				0D1B01F22DFEDA100093B1FF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
