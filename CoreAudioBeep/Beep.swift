@@ -20,12 +20,21 @@ class Beep {
 
         // Move the logic out of the initialiser
         noiseNode = createNoiseNode()
+//        
+//        let freqL: Float = 140  // Left ear frequency (Hz)
+//        let freqR: Float = 144  // Right ear frequency (Hz)
+//
+        
+        let leftSineWave = SineWave(sampleRate: Float(sampleRate), frequency: 140.00)
+        let rightSineWave = SineWave(sampleRate: Float(sampleRate), frequency: 144.00)
 
-        binauralNode = createBinauralNode()
+
+        binauralNode = createAudioSourceNode(rightWave: rightSineWave, leftWave: leftSineWave)
 
 //        squareNode = createSquareWaveNode()
         let squareWave = SquareWave(sampleRate: Float(sampleRate), frequency: 70.0)
-        squareNode = createAudioSourceNode(wave: squareWave)
+        squareNode = createAudioSourceNode(rightWave: squareWave, leftWave: squareWave)
+        
 
         // connect the nodes to mixers, then conect the mixers to the engine
         attachAudionodeToEngine(
@@ -117,9 +126,10 @@ class Beep {
         }
     }
     
-    func createAudioSourceNode(wave: Wave) -> AVAudioSourceNode {
+    func createAudioSourceNode(rightWave: Wave, leftWave: Wave) -> AVAudioSourceNode {
         
-        var wave = wave
+        var rightWave = rightWave
+        var leftWave = leftWave
         return AVAudioSourceNode {
             _,
             _,
@@ -139,55 +149,8 @@ class Beep {
                 capacity: Int(frameCount)
             )
             for frame in 0..<Int(frameCount) {
-                left?[frame] = wave.nextSample()
-                right?[frame] = wave.nextSample()
-            }
-            return noErr
-        }
-    }
-
-    func createBinauralNode() -> AVAudioSourceNode {
-
-        // Create an AVAudioSourceNode that creates a binaural tone
-        // Binaural tone node (stereo)
-        var phaseL: Float = 0
-        var phaseR: Float = 0
-        let freqL: Float = 140  // Left ear frequency (Hz)
-        let freqR: Float = 144  // Right ear frequency (Hz)
-        let twoPi = 2 * Float.pi
-
-        return AVAudioSourceNode {
-            _,
-            _,
-            frameCount,
-            audioBufferList -> OSStatus in
-            let ablPointer = UnsafeMutableAudioBufferListPointer(
-                audioBufferList
-            )
-            guard ablPointer.count == 2 else { return noErr }
-
-            // Note that here we're assuming that ablPointer will have two channels
-            // ablPointer[0] and ablPointer[1]
-            // But we don't know at this stage how the engine's AVAudioFormat is configured
-            // I think this is part of the reason why our ablPointer is "Unsafe"
-            // If the format has only one channel this audio source won't make any sound
-            // To demonstrate this, change the number of channels assigned to "format" above to 1
-            // then try to play this node in the view
-            let left = ablPointer[0].mData?.bindMemory(
-                to: Float.self,
-                capacity: Int(frameCount)
-            )
-            let right = ablPointer[1].mData?.bindMemory(
-                to: Float.self,
-                capacity: Int(frameCount)
-            )
-            for frame in 0..<Int(frameCount) {
-                left?[frame] = sin(phaseL) * 0.1
-                right?[frame] = sin(phaseR) * 0.1
-                phaseL += twoPi * freqL / Float(self.sampleRate)
-                phaseR += twoPi * freqR / Float(self.sampleRate)
-                if phaseL > twoPi { phaseL -= twoPi }
-                if phaseR > twoPi { phaseR -= twoPi }
+                left?[frame] = leftWave.nextSample()
+                right?[frame] = rightWave.nextSample()
             }
             return noErr
         }
