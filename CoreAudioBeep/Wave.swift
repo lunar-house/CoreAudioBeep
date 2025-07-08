@@ -18,7 +18,6 @@ protocol Wave {
     var frequency: Float { get set }
 
     var sampleRate: Float { get set }
-
 }
 
 extension Wave {
@@ -26,17 +25,9 @@ extension Wave {
         return 2 * Float.pi
     }
 
-    var freqL: Float {
-        return 70.0
-    }
-
-    var freqR: Float {
-        return 70.0
-    }
-
     mutating func nextSample() -> Float {
         let frame = nextSample(phase: phase)
-        phase += twoPi * freqL / Float(sampleRate)
+        phase += twoPi * frequency / Float(sampleRate)
         if phase > twoPi { phase -= twoPi }
         return frame
     }
