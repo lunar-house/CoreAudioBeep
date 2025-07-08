@@ -19,9 +19,12 @@ struct SquareWaveTests {
         #expect(squareWave.nextSample() == -1.0)
     }
 
-    @Test func nextSample_isOne() async throws {
+    @Test func sampleRateOf2AndFrequency1_nextSample_oscillatesBetweenExtremes() async throws {
         var squareWave = SquareWave(sampleRate: 2, frequency: 1)
         #expect(squareWave.nextSample() == 1.0)
+        #expect(squareWave.nextSample() == -1.0)
+        #expect(squareWave.nextSample() == 1.0)
+        #expect(squareWave.nextSample() == -1.0)
     }
 
 }

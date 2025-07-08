@@ -1,9 +1,3 @@
-//
-//  SquareWave.swift
-//  CoreAudioBeep
-//
-//  Created by Petar Simonovic on 23/06/2025.
-//
 import Foundation
 
 class SquareWave: Wave {
