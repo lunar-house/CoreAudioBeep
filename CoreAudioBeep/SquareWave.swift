@@ -9,6 +9,7 @@ import Foundation
 class SquareWave: Wave {
 
     var sampleRate: Float
+    var phase: Float = 1.0
     var phaseL: Float = 1.0
     var phaseR: Float = 1.0
     var frequency: Float
