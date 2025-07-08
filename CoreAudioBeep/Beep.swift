@@ -139,46 +139,8 @@ class Beep {
                 capacity: Int(frameCount)
             )
             for frame in 0..<Int(frameCount) {
-                left?[frame] = wave.generateLeftFrame(sampleRate: self.sampleRate)
-                right?[frame] = wave.generateRightFrame(sampleRate: self.sampleRate)
-                       }
-            return noErr
-        }
-    }
-
-    func createSquareWaveNode() -> AVAudioSourceNode {
-
-        var phaseL: Float = 0
-        var phaseR: Float = 0
-        let freqL: Float = 70  // Left ear frequency (Hz)
-        let freqR: Float = 70  // Right ear frequency (Hz)
-        let twoPi = 2 * Float.pi
-
-        return AVAudioSourceNode {
-            _,
-            _,
-            frameCount,
-            audioBufferList -> OSStatus in
-            let ablPointer = UnsafeMutableAudioBufferListPointer(
-                audioBufferList
-            )
-            guard ablPointer.count == 2 else { return noErr }
-
-            let left = ablPointer[0].mData?.bindMemory(
-                to: Float.self,
-                capacity: Int(frameCount)
-            )
-            let right = ablPointer[1].mData?.bindMemory(
-                to: Float.self,
-                capacity: Int(frameCount)
-            )
-            for frame in 0..<Int(frameCount) {
-                left?[frame] = sin(phaseL) > 0 ? 1.0 : -1.0 * 0.1
-                right?[frame] = sin(phaseR) > 0 ? 1.0 : -1.0 * 0.1
-                phaseL += twoPi * freqL / Float(self.sampleRate)
-                phaseR += twoPi * freqR / Float(self.sampleRate)
-                if phaseL > twoPi { phaseL -= twoPi }
-                if phaseR > twoPi { phaseR -= twoPi }
+                left?[frame] = wave.nextSample()
+                right?[frame] = wave.nextSample()
             }
             return noErr
         }
